@@ -2,7 +2,7 @@ const express = require("express");
 const user = require("./../modal/person");
 const router = express.Router();
 router
-  .route("/person")
+  .route("/")
   .post(async (req, res) => {
     try {
       const data = req.body;
@@ -30,7 +30,7 @@ router
   });
 
 router
-  .route("/person/:id")
+  .route("/:id")
   .get(async (req, res) => {
     const unfilteredId = req.params.id;
     const filteredId = unfilteredId.replace(":", "");
@@ -46,14 +46,10 @@ router
     const unfilteredId = req.params.id;
     const filteredId = unfilteredId.replace(":", "");
     try {
-      const updatedUser = await user.findByIdAndUpdate(
-        filteredId,
-        { $set: req.body },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+      const updatedUser = await user.findByIdAndUpdate(filteredId, req.body, {
+        new: true,
+        runValidators: true,
+      });
       if (!updatedUser) {
         return res.status(404).send("User not found");
       }
